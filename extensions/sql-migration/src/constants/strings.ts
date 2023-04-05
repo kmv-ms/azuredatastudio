@@ -409,9 +409,9 @@ export function SQL_TARGET_CONNECTION_SUCCESS(databaseCount: string): string {
 
 export const SQL_TARGET_MISSING_SOURCE_DATABASES = localize('sql.migration.wizard.source.missing', 'Connection was successful but did not find any target databases.');
 
-export function SQL_TARGET_CONNECTION_SUCCESS_LOGINS(databaseCount: string): string {
-	return localize('sql.login.migration.wizard.target.connection.success', "Connection was successful.", databaseCount);
-}
+export const SQL_TARGET_CONNECTION_SUCCESS_LOGINS = localize(
+	'sql.login.migration.wizard.target.connection.success',
+	"Connection was successful.");
 
 export const SQL_TARGET_MAPPING_ERROR_MISSING_TARGET = localize(
 	'sql.migration.wizard.target.missing',
