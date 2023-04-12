@@ -132,7 +132,9 @@ export class ConnectionConfig {
 				// Remove the profile if already set
 				let sameProfileInList = profiles.find(value => {
 					const providerConnectionProfile = ConnectionProfile.createFromStoredProfile(value, this._capabilitiesService);
-					return matcher(providerConnectionProfile, connectionProfile);
+					const match = matcher(providerConnectionProfile, connectionProfile);
+					providerConnectionProfile.dispose();
+					return match;
 				});
 				if (sameProfileInList) {
 					let profileIndex = profiles.findIndex(value => value === sameProfileInList);
