@@ -209,7 +209,7 @@ export class SchemaCompareDialog {
 			}).send();
 
 		// update source and target values that are displayed
-		this.schemaCompareMainWindow.updateSourceAndTarget();
+		await this.schemaCompareMainWindow.updateSourceAndTarget();
 
 		const sourceEndpointChanged = this.endpointChanged(this.previousSource, this.schemaCompareMainWindow.sourceEndpointInfo);
 		const targetEndpointChanged = this.endpointChanged(this.previousTarget, this.schemaCompareMainWindow.targetEndpointInfo);
