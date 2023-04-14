@@ -326,15 +326,15 @@ export class SchemaCompareMainWindow {
 	}
 
 	// update source and target name to display
-	public updateSourceAndTarget() {
+	public async updateSourceAndTarget(): Promise<void> {
 		this.sourceName = getEndpointName(this.sourceEndpointInfo);
 		this.targetName = getEndpointName(this.targetEndpointInfo);
 
-		this.sourceNameComponent.updateProperties({
+		await this.sourceNameComponent.updateProperties({
 			value: this.sourceName,
 			title: this.sourceName
 		});
-		this.targetNameComponent.updateProperties({
+		await this.targetNameComponent.updateProperties({
 			value: this.targetName,
 			title: this.targetName
 		});
@@ -387,7 +387,7 @@ export class SchemaCompareMainWindow {
 						operationId: this.comparisonResult.operationId
 					}).send();
 
-				vscode.window.showErrorMessage(loc.compareErrorMessage(this.comparisonResult?.errorMessage));
+				void vscode.window.showErrorMessage(loc.compareErrorMessage(this.comparisonResult?.errorMessage));
 
 				// reset state so a new comparison can be made
 				this.resetWindow();
@@ -404,7 +404,7 @@ export class SchemaCompareMainWindow {
 
 		let data = this.getAllDifferences(this.comparisonResult.differences);
 
-		this.differencesTable.updateProperties({
+		await this.differencesTable.updateProperties({
 			data: data,
 			columns: [
 				{
@@ -492,13 +492,13 @@ export class SchemaCompareMainWindow {
 
 		let sourceText = '';
 		let targetText = '';
-		this.tablelistenersToDispose.push(this.differencesTable.onRowSelected(() => {
+		this.tablelistenersToDispose.push(this.differencesTable.onRowSelected(async () => {
 			let difference = this.comparisonResult.differences[this.differencesTable.selectedRows[0]];
 			if (difference !== undefined) {
 				sourceText = this.getFormattedScript(difference, true);
 				targetText = this.getFormattedScript(difference, false);
 
-				this.diffEditor.updateProperties({
+				await this.diffEditor.updateProperties({
 					contentLeft: sourceText,
 					contentRight: targetText,
 					title: loc.diffEditorTitle
@@ -518,7 +518,7 @@ export class SchemaCompareMainWindow {
 		// show an info notification the first time when trying to exclude to notify the user that it may take some time to calculate affected dependencies
 		if (this.showIncludeExcludeWaitingMessage) {
 			this.showIncludeExcludeWaitingMessage = false;
-			vscode.window.showInformationMessage(loc.includeExcludeInfoMessage);
+			void vscode.window.showInformationMessage(loc.includeExcludeInfoMessage);
 		}
 
 		let diff = this.comparisonResult.differences[checkboxState.row];
@@ -558,9 +558,9 @@ export class SchemaCompareMainWindow {
 					cannotExcludeMessage = loc.cannotExcludeMessage(diffEntryName);
 					cannotIncludeMessage = loc.cannotIncludeMessage(diffEntryName);
 				}
-				vscode.window.showWarningMessage(checkboxState.checked ? cannotIncludeMessage : cannotExcludeMessage);
+				void vscode.window.showWarningMessage(checkboxState.checked ? cannotIncludeMessage : cannotExcludeMessage);
 			} else {
-				vscode.window.showWarningMessage(result.errorMessage);
+				void vscode.window.showWarningMessage(result.errorMessage);
 			}
 
 			// set checkbox back to previous state
@@ -711,7 +711,7 @@ export class SchemaCompareMainWindow {
 		this.flexModel.addItem(this.loader, { CSSStyles: { 'margin-top': '30px' } });
 		this.flexModel.addItem(this.waitText, { CSSStyles: { 'margin-top': '30px', 'align-self': 'center' } });
 		this.showIncludeExcludeWaitingMessage = true;
-		this.diffEditor.updateProperties({
+		await this.diffEditor.updateProperties({
 			contentLeft: os.EOL,
 			contentRight: os.EOL,
 			title: loc.diffEditorTitle
@@ -787,7 +787,7 @@ export class SchemaCompareMainWindow {
 					.withAdditionalProperties({
 						'operationId': this.operationId
 					}).send();
-				vscode.window.showErrorMessage(loc.cancelErrorMessage(result.errorMessage));
+				void vscode.window.showErrorMessage(loc.cancelErrorMessage(result.errorMessage));
 			}
 			TelemetryReporter.createActionEvent(TelemetryViews.SchemaCompareMainWindow, 'SchemaCompareCancelEnded')
 				.withAdditionalProperties({
@@ -824,7 +824,7 @@ export class SchemaCompareMainWindow {
 				.withAdditionalProperties({
 					'operationId': this.comparisonResult.operationId
 				}).send();
-			vscode.window.showErrorMessage(loc.generateScriptErrorMessage(result.errorMessage));
+			void vscode.window.showErrorMessage(loc.generateScriptErrorMessage(result.errorMessage));
 		}
 		TelemetryReporter.createActionEvent(TelemetryViews.SchemaCompareMainWindow, 'SchemaCompareGenerateScriptEnded')
 			.withAdditionalProperties({
@@ -905,9 +905,9 @@ export class SchemaCompareMainWindow {
 							'operationId': this.comparisonResult.operationId,
 							'targetType': getSchemaCompareEndpointString(this.targetEndpointInfo.endpointType)
 						}).send();
-					vscode.window.showErrorMessage(loc.applyErrorMessage(result?.errorMessage));
+					void vscode.window.showErrorMessage(loc.applyErrorMessage(result?.errorMessage));
 
-					// reenable generate script and apply buttons if apply failed
+					// re-enable generate script and apply buttons if apply failed
 					this.generateScriptButton.enabled = true;
 					this.generateScriptButton.title = loc.generateScriptEnabledMessage;
 					this.applyButton.enabled = true;
@@ -1004,12 +1004,12 @@ export class SchemaCompareMainWindow {
 			[this.sourceEndpointInfo, this.targetEndpointInfo] = [this.targetEndpointInfo, this.sourceEndpointInfo];
 			[this.sourceName, this.targetName] = [this.targetName, this.sourceName];
 
-			this.sourceNameComponent.updateProperties({
+			await this.sourceNameComponent.updateProperties({
 				value: this.sourceName,
 				title: this.sourceName
 			});
 
-			this.targetNameComponent.updateProperties({
+			await this.targetNameComponent.updateProperties({
 				value: this.targetName,
 				title: this.targetName
 			});
@@ -1090,7 +1090,7 @@ export class SchemaCompareMainWindow {
 		}
 
 		let fileUri = fileUris[0];
-		this.openScmpFile(fileUri, true);
+		await this.openScmpFile(fileUri, true);
 	}
 
 	/**
@@ -1108,14 +1108,14 @@ export class SchemaCompareMainWindow {
 		const result = await service.schemaCompareOpenScmp(fileUri.fsPath);
 		if (!result || !result.success) {
 			TelemetryReporter.sendErrorEvent2(TelemetryViews.SchemaCompareMainWindow, 'SchemaCompareOpenScmpFailed', undefined, undefined, getTelemetryErrorType(result.errorMessage));
-			vscode.window.showErrorMessage(loc.openScmpErrorMessage(result.errorMessage));
+			void vscode.window.showErrorMessage(loc.openScmpErrorMessage(result.errorMessage));
 			return;
 		}
 
 		this.sourceEndpointInfo = await this.constructEndpointInfo(result.sourceEndpointInfo, loc.sourceTitle);
 		this.targetEndpointInfo = await this.constructEndpointInfo(result.targetEndpointInfo, loc.targetTitle);
 
-		this.updateSourceAndTarget();
+		await this.updateSourceAndTarget();
 		this.setDeploymentOptions(result.deploymentOptions);
 		this.scmpSourceExcludes = result.excludedSourceElements;
 		this.scmpTargetExcludes = result.excludedTargetElements;
@@ -1214,7 +1214,7 @@ export class SchemaCompareMainWindow {
 				.withAdditionalProperties({
 					operationId: this.comparisonResult.operationId
 				}).send();
-			vscode.window.showErrorMessage(loc.saveScmpErrorMessage(result.errorMessage));
+			void vscode.window.showErrorMessage(loc.saveScmpErrorMessage(result.errorMessage));
 		}
 		TelemetryReporter.createActionEvent(TelemetryViews.SchemaCompareMainWindow, 'SchemaCompareSaveScmpEnded')
 			.withAdditionalProperties({

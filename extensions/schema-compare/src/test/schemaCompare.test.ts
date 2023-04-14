@@ -528,7 +528,7 @@ describe('SchemaCompareMainWindow.updateSourceAndTarget @DacFx@', function (): v
 		result.sourceEndpointInfo = { ...endpointInfo };
 		result.targetEndpointInfo = { ...endpointInfo };
 
-		result.updateSourceAndTarget();
+		await result.updateSourceAndTarget();
 
 		result.verifyButtonsState({
 			compareButtonState: false,
@@ -557,7 +557,7 @@ describe('SchemaCompareMainWindow.updateSourceAndTarget @DacFx@', function (): v
 		result.sourceEndpointInfo = { ...endpointInfo };
 		result.targetEndpointInfo = setDacpacEndpointInfo(mocktarget);
 
-		result.updateSourceAndTarget();
+		await result.updateSourceAndTarget();
 
 		result.verifyButtonsState({
 			compareButtonState: false,
@@ -585,7 +585,7 @@ describe('SchemaCompareMainWindow.updateSourceAndTarget @DacFx@', function (): v
 		result.sourceEndpointInfo = setDacpacEndpointInfo(mocksource);
 		result.targetEndpointInfo = setDacpacEndpointInfo(mocktarget);
 
-		result.updateSourceAndTarget();
+		await result.updateSourceAndTarget();
 
 		result.verifyButtonsState({
 			compareButtonState: true,

@@ -226,9 +226,9 @@ export class SchemaCompareDialog {
 				message = loc.differentTargetMessage;
 			}
 
-			vscode.window.showWarningMessage(message, loc.YesButtonText, loc.NoButtonText).then((result) => {
+			void vscode.window.showWarningMessage(message, loc.YesButtonText, loc.NoButtonText).then((result) => {
 				if (result === loc.YesButtonText) {
-					this.schemaCompareMainWindow.startCompare();
+					void this.schemaCompareMainWindow.startCompare();
 				}
 			});
 		}
@@ -746,7 +746,7 @@ export class SchemaCompareDialog {
 		});
 
 		// don't await so that dialog loading won't be blocked. Dropdown will show loading indicator until it is populated
-		this.populateServerDropdown(false);
+		void this.populateServerDropdown(false);
 
 		return {
 			component: this.sourceServerDropdown,
@@ -803,7 +803,7 @@ export class SchemaCompareDialog {
 			}
 		});
 		// don't await so that dialog loading won't be blocked. Dropdown will show loading indicator until it is populated
-		this.populateServerDropdown(true);
+		void this.populateServerDropdown(true);
 		return {
 			component: this.targetServerDropdown,
 			title: loc.ServerDropdownLabel,

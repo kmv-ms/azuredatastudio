@@ -140,7 +140,7 @@ export async function verifyConnectionAndGetOwnerUri(endpoint: mssql.SchemaCompa
 				}
 			}
 			if (!ownerUri && connection.errorMessage) {
-				vscode.window.showErrorMessage(connection.errorMessage);
+				void vscode.window.showErrorMessage(connection.errorMessage);
 			}
 		}
 	}
